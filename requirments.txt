@@ -1,20 +1,41 @@
 #!/usr/bin/env bash
 # Run with: bash requirments.txt
+# Windows without Bash: run .\requirments.cmd instead.
 set -euo pipefail
 
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 
 if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
-  echo "Node.js and npm are required. Install them, then run this script again." >&2
+  case "$(uname -s)" in
+    Darwin)
+      if command -v brew >/dev/null 2>&1; then
+        brew install node
+      else
+        echo "Install Node.js LTS from https://nodejs.org, reopen Terminal, then rerun this script." >&2
+        exit 1
+      fi
+      ;;
+    MINGW*|MSYS*|CYGWIN*)
+      echo 'Run .\requirments.cmd from PowerShell or Command Prompt to install Node.js and dependencies.' >&2
+      exit 1
+      ;;
+    *)
+      echo "Install Node.js and npm for your system, then rerun this script." >&2
+      exit 1
+      ;;
+  esac
+fi
+
+if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
+  echo "Node.js/npm are still unavailable. Reopen your terminal and rerun this script." >&2
   exit 1
 fi
 
-# Create npm's dependency manifest if this is the first installation.
-if [ ! -f package.json ]; then
-  npm init -y
-fi
-
 # http and fs are included with Node.js. Script.py has no dependencies.
-npm install jsonwebtoken
+if [ -f package-lock.json ]; then
+  npm ci
+else
+  npm install
+fi
 
 echo "Dependencies installed. Start the server with: node Server.js"
