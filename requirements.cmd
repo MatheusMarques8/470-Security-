@@ -33,9 +33,9 @@ echo Dependencies installed. Start the server with: node Server.js
 exit /b 0
 
 :manual_install
-echo Install Node.js LTS from https://nodejs.org, then reopen your terminal and run .\requirments.cmd again.
+echo Install Node.js LTS from https://nodejs.org, then reopen your terminal and run .\requirements.cmd again.
 exit /b 1
 
 :restart_terminal
-echo Reopen your terminal so Node.js/npm are on PATH, then run .\requirments.cmd again.
+echo Reopen your terminal so Node.js/npm are on PATH, then run .\requirements.cmd again.
 exit /b 1
