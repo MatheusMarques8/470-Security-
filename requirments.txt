@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Run with: bash requirments.txt
+set -euo pipefail
+
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+
+if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
+  echo "Node.js and npm are required. Install them, then run this script again." >&2
+  exit 1
+fi
+
+# Create npm's dependency manifest if this is the first installation.
+if [ ! -f package.json ]; then
+  npm init -y
+fi
+
+# http and fs are included with Node.js. Script.py has no dependencies.
+npm install jsonwebtoken
+
+echo "Dependencies installed. Start the server with: node Server.js"
